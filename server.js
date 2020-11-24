@@ -7,6 +7,9 @@ const app = express();
 
 //load the quotes JSON
 const quotes = require("./quotes.json");
+const quotesWithId = require("./quotes-with-id.json")
+
+const { request, response } = require("express");
 
 // Now register handlers for some routes:
 //   /                  - Return some helpful welcome info (text)
@@ -17,6 +20,38 @@ app.get("/", function (request, response) {
 });
 
 //START OF YOUR CODE...
+app.get("/quotes",(request,response)=>{
+  response.send(quotes)
+})
+
+app.get("/quotes/random", (req,res)=>{
+  function pickFromArray(arr) {
+    return arr[Math.floor(Math.random() * arr.length)];
+  }
+  res.send(pickFromArray(quotesWithId))
+})
+
+// app.get request, making an endpoint
+app.get("/quotes/search", (req, res) => {
+// making variable "term"
+  const term = req.query.term
+// making function "search"
+  function search (arr) {
+// filter the array 
+      return arr.filter ((item) => {
+// using .includes on quotes
+        if (item.quote.includes(term)) {
+// retuen item
+          return item
+        }
+      })
+  }
+// send the response 
+  res.send(search(quotes))
+
+})
+
+
 
 //...END OF YOUR CODE
 
